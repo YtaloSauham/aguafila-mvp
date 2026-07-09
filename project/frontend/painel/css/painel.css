@@ -1,0 +1,183 @@
+/* Painel Público — parede de vidro sobre névoa abissal, legível a distância.
+   Números grandes em serifada condensada, cartões em vidro fosco; o cartão
+   chamado pulsa com a "linha d'água" luminosa. */
+
+body {
+  background: var(--abismo);
+  color: var(--vapor);
+  height: 100vh;
+  overflow: hidden;
+}
+
+.pn {
+  position: relative;
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+  padding: 36px 52px;
+  gap: 26px;
+  z-index: 1;
+}
+
+.pn__header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.pn__marca {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  font-family: var(--fonte-display);
+  font-style: italic;
+  font-weight: 500;
+  font-size: 1.5rem;
+}
+
+.pn__relogio {
+  font-family: var(--fonte-numeros);
+  font-variant-numeric: tabular-nums;
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: var(--turquesa);
+}
+
+.pn__linha {
+  margin: -6px 0 4px;
+}
+
+.pn__esteiras {
+  flex: 1;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+  gap: 26px;
+  min-height: 0;
+}
+
+.pn-card {
+  position: relative;
+  border-radius: var(--raio-xl);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 16px;
+  background: var(--vidro-bg-escuro);
+  border: 1px solid var(--vidro-borda-escuro);
+  backdrop-filter: blur(20px) saturate(140%);
+  -webkit-backdrop-filter: blur(20px) saturate(140%);
+  box-shadow: var(--sombra-flutuante);
+  transition: border-color 340ms ease, background 340ms ease, box-shadow 340ms ease;
+  overflow: hidden;
+}
+
+.pn-card::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(160deg, rgba(255,255,255,0.05), transparent 40%);
+  pointer-events: none;
+}
+
+.pn-card[data-status="OCUPADA"] {
+  border-color: rgba(34, 230, 196, 0.5);
+  background: linear-gradient(165deg, rgba(34,230,196,0.10), var(--vidro-bg-escuro) 60%);
+  box-shadow: var(--sombra-flutuante), var(--brilho-turquesa);
+}
+
+.pn-card[data-status="OCUPADA"].pn-card--pulsar {
+  animation: pulsar 1.5s ease-in-out 2;
+}
+
+@keyframes pulsar {
+  0%, 100% { box-shadow: var(--sombra-flutuante), 0 0 0 0 rgba(34, 230, 196, 0.45); }
+  50%      { box-shadow: var(--sombra-flutuante), 0 0 0 26px rgba(34, 230, 196, 0); }
+}
+
+.pn-card__nome {
+  margin: 0;
+  text-transform: uppercase;
+  letter-spacing: 0.16em;
+  font-size: 0.95rem;
+  color: var(--champanhe);
+  font-weight: 700;
+}
+
+.pn-card__numero {
+  margin: 0;
+  font-family: var(--fonte-numeros);
+  font-weight: 700;
+  font-size: clamp(4.2rem, 10.5vw, 8.5rem);
+  line-height: 1;
+  letter-spacing: -0.01em;
+}
+.pn-card[data-status="OCUPADA"] .pn-card__numero {
+  background: linear-gradient(180deg, #FFFFFF, var(--turquesa) 160%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+.pn-card[data-status="LIVRE"] .pn-card__numero {
+  color: #3E5A72;
+}
+
+.pn-card__badge {
+  position: absolute;
+  top: 22px;
+  right: 22px;
+}
+
+.pn__historico {
+  flex-shrink: 0;
+}
+
+.pn__historico h2 {
+  font-family: var(--fonte-texto);
+  font-size: 0.82rem;
+  text-transform: uppercase;
+  letter-spacing: 0.16em;
+  color: #6E8CA2;
+  margin: 0 0 14px;
+  font-weight: 700;
+}
+
+.pn__historico-lista {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+.pn__historico-lista li {
+  background: var(--vidro-bg-escuro);
+  border: 1px solid var(--vidro-borda-escuro);
+  border-radius: 999px;
+  padding: 10px 20px;
+  font-family: var(--fonte-numeros);
+  font-weight: 700;
+  font-size: 1.05rem;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  color: var(--vapor);
+}
+
+.pn__historico-lista li span {
+  font-family: var(--fonte-texto);
+  font-weight: 500;
+  font-size: 0.78rem;
+  color: #6E8CA2;
+}
+
+.pn__rodape {
+  text-align: center;
+  padding-top: 12px;
+  border-top: 1px solid var(--vidro-borda-escuro);
+  color: #6E8CA2;
+  font-size: 1rem;
+  font-family: var(--fonte-display);
+  font-style: italic;
+}

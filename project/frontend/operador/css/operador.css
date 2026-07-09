@@ -1,0 +1,335 @@
+/* Painel do Operador — estação de trabalho em "porcelana": fundo claro para
+   uso prolongado, cartões em vidro elevado sobre uma névoa suave, cabeçalho
+   abissal com a "linha d'água" assinatura. Fila à esquerda como um trilho
+   vertical; esteiras à direita como blocos de vidro. */
+
+body {
+  background:
+    radial-gradient(60% 50% at 12% -6%, rgba(34, 230, 196, 0.10), transparent 60%),
+    radial-gradient(45% 40% at 100% 0%, rgba(227, 181, 103, 0.08), transparent 60%),
+    var(--gelo);
+  color: var(--tinta-clara);
+  min-height: 100vh;
+}
+
+.op {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+}
+
+.op__header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 20px 36px;
+  background: var(--abismo);
+  color: var(--vapor);
+}
+
+.op__marca {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+.op__marca strong {
+  display: block;
+  font-family: var(--fonte-display);
+  font-style: italic;
+  font-weight: 500;
+  font-size: 1.15rem;
+}
+
+.op__subtitulo {
+  display: block;
+  font-size: 0.76rem;
+  color: rgba(238, 248, 250, 0.6);
+  font-weight: 500;
+  letter-spacing: 0.03em;
+  margin-top: 2px;
+}
+
+.op__status-conexao {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  font-size: 0.84rem;
+  color: rgba(238, 248, 250, 0.75);
+  padding: 7px 16px;
+  border-radius: 999px;
+  background: rgba(238, 248, 250, 0.06);
+  border: 1px solid rgba(238, 248, 250, 0.1);
+}
+
+.op__ponto {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--aco);
+  transition: background var(--transicao), box-shadow var(--transicao);
+}
+.op__status-conexao.conectado .op__ponto {
+  background: var(--esmeralda);
+  box-shadow: 0 0 0 4px rgba(47, 217, 138, 0.22);
+}
+.op__status-conexao.desconectado .op__ponto {
+  background: var(--coral);
+  box-shadow: 0 0 0 4px rgba(255, 92, 114, 0.22);
+}
+
+.op__grid {
+  flex: 1;
+  display: grid;
+  grid-template-columns: minmax(320px, 400px) 1fr;
+  gap: 26px;
+  padding: 28px 36px 44px;
+}
+
+.op__coluna {
+  background: var(--vidro-bg-claro);
+  border: 1px solid var(--vidro-borda-claro);
+  backdrop-filter: blur(18px) saturate(160%);
+  -webkit-backdrop-filter: blur(18px) saturate(160%);
+  border-radius: var(--raio-xl);
+  box-shadow: var(--sombra-card-claro);
+  padding: 26px;
+  display: flex;
+  flex-direction: column;
+  min-height: 0;
+}
+
+.op__coluna-topo {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 20px;
+}
+
+.op__coluna-topo h2 {
+  font-family: var(--fonte-display);
+  font-style: italic;
+  font-weight: 500;
+  font-size: 1.28rem;
+  margin: 0;
+  color: var(--tinta-clara);
+}
+
+.op__contador {
+  background: rgba(14, 182, 164, 0.12);
+  color: var(--turquesa-forte);
+  font-weight: 800;
+  font-size: 0.85rem;
+  padding: 5px 13px;
+  border-radius: 999px;
+  font-variant-numeric: tabular-nums;
+  font-family: var(--fonte-numeros);
+}
+
+/* --- Fila de espera --- */
+.fila-lista {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 11px;
+  overflow-y: auto;
+}
+
+.fila-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 15px 18px;
+  background: #fff;
+  border: 1px solid rgba(10, 42, 71, 0.08);
+  border-left: 3px solid rgba(10, 42, 71, 0.1);
+  border-radius: var(--raio-md);
+  transition: border-color var(--transicao), transform var(--transicao), box-shadow var(--transicao);
+  animation: entra 260ms var(--transicao-lenta) both;
+}
+
+@keyframes entra {
+  from { opacity: 0; transform: translateY(-8px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.fila-item:first-child {
+  border-left-color: var(--turquesa);
+  background: linear-gradient(90deg, rgba(34, 230, 196, 0.06), #fff 22%);
+  box-shadow: 0 8px 20px -12px rgba(14, 182, 164, 0.35);
+}
+
+.fila-item__info {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.fila-item__numero {
+  font-family: var(--fonte-numeros);
+  font-weight: 700;
+  font-size: 1.35rem;
+  letter-spacing: -0.01em;
+}
+
+.fila-item__hora {
+  font-size: 0.78rem;
+  color: var(--aco);
+}
+
+.fila-item__cancelar {
+  background: transparent;
+  color: var(--coral);
+  font-size: 0.8rem;
+  font-weight: 700;
+  padding: 7px 12px;
+  border-radius: var(--raio-sm);
+  transition: background var(--transicao);
+}
+.fila-item__cancelar:hover {
+  background: rgba(255, 92, 114, 0.09);
+}
+
+.fila-vazia {
+  color: var(--aco);
+  text-align: center;
+  padding: 36px 0;
+  font-family: var(--fonte-display);
+  font-style: italic;
+}
+
+/* --- Esteiras --- */
+.esteiras-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 20px;
+}
+
+.esteira-card {
+  background: #fff;
+  border: 1px solid rgba(10, 42, 71, 0.08);
+  border-radius: var(--raio-lg);
+  padding: 22px;
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+  transition: border-color var(--transicao), box-shadow var(--transicao), transform var(--transicao);
+}
+
+.esteira-card[data-status="OCUPADA"] {
+  border-color: rgba(34, 230, 196, 0.45);
+  box-shadow: 0 14px 34px -18px rgba(14, 182, 164, 0.35);
+}
+
+.esteira-card__header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.esteira-card__nome {
+  margin: 0;
+  font-family: var(--fonte-display);
+  font-style: italic;
+  font-weight: 500;
+  font-size: 1.1rem;
+}
+
+.esteira-card__corpo {
+  text-align: center;
+  padding: 20px 0;
+  background: linear-gradient(180deg, var(--gelo), #fff);
+  border-radius: var(--raio-md);
+  border: 1px solid rgba(10, 42, 71, 0.05);
+}
+
+.esteira-card__senha-label {
+  margin: 0 0 6px;
+  font-size: 0.72rem;
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+  color: var(--aco);
+  font-weight: 700;
+}
+
+.esteira-card__senha-numero {
+  margin: 0;
+  font-family: var(--fonte-numeros);
+  font-weight: 700;
+  font-size: 2.5rem;
+  letter-spacing: -0.01em;
+}
+
+.esteira-card__acoes {
+  display: flex;
+  flex-direction: column;
+  gap: 9px;
+}
+
+.esteira-card__botao {
+  padding: 13px 16px;
+  border-radius: var(--raio-md);
+  font-weight: 700;
+  font-size: 0.9rem;
+  transition: transform var(--transicao), opacity var(--transicao), box-shadow var(--transicao);
+}
+.esteira-card__botao:hover { transform: translateY(-2px); }
+.esteira-card__botao:disabled { opacity: 0.45; cursor: not-allowed; transform: none; }
+
+.esteira-card__botao--primaria {
+  background: linear-gradient(135deg, var(--turquesa), var(--turquesa-forte));
+  color: #04231F;
+  box-shadow: 0 14px 28px -14px rgba(14, 182, 164, 0.55);
+}
+.esteira-card__botao--secundaria {
+  background: var(--gelo);
+  color: var(--tinta-clara);
+  border: 1px solid rgba(10, 42, 71, 0.1);
+}
+.esteira-card__botao--sucesso {
+  background: linear-gradient(135deg, var(--esmeralda), #17a066);
+  color: #fff;
+  box-shadow: 0 14px 28px -14px rgba(47, 217, 138, 0.5);
+}
+
+/* --- Últimas chamadas --- */
+.ultimas-chamadas {
+  margin-top: 30px;
+  padding-top: 22px;
+  border-top: 1px solid rgba(10, 42, 71, 0.08);
+}
+.ultimas-chamadas h3 {
+  margin: 0 0 14px;
+  font-size: 0.9rem;
+  font-family: var(--fonte-texto);
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--aco);
+}
+.ultimas-chamadas__lista {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+.ultimas-chamadas__lista li {
+  background: var(--gelo);
+  border: 1px solid rgba(10, 42, 71, 0.06);
+  border-radius: 999px;
+  padding: 7px 15px;
+  font-size: 0.85rem;
+  font-weight: 700;
+  font-family: var(--fonte-numeros);
+  color: var(--tinta-clara);
+}
+
+@media (max-width: 900px) {
+  .op__grid {
+    grid-template-columns: 1fr;
+  }
+}

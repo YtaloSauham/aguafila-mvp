@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Painel do Operador · Abastecimento de Água</title>
+  <link rel="stylesheet" href="/assets/css/base.css" />
+  <link rel="stylesheet" href="css/operador.css" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,500;0,9..144,600;1,9..144,500&family=Manrope:wght@400;500;600;700;800&family=Bricolage+Grotesque:wght@600;700;800&display=swap" rel="stylesheet" />
+</head>
+<body>
+  <div class="op">
+    <header class="op__header">
+      <div class="op__marca">
+        <span class="marca-gota" aria-hidden="true">
+          <svg width="24" height="24" viewBox="0 0 26 26" fill="none">
+            <defs>
+              <linearGradient id="gota-grad-o" x1="0" y1="0" x2="0" y2="26" gradientUnits="userSpaceOnUse">
+                <stop offset="0" stop-color="#5FF3DA"/>
+                <stop offset="1" stop-color="#0EB6A4"/>
+              </linearGradient>
+            </defs>
+            <path d="M13 1.5C13 1.5 4 12.2 4 17.3C4 22.2 8.1 25 13 25C17.9 25 22 22.2 22 17.3C22 12.2 13 1.5 13 1.5Z" fill="url(#gota-grad-o)"/>
+          </svg>
+        </span>
+        <div>
+          <strong>Painel do Operador</strong>
+          <span class="op__subtitulo">Abastecimento de Água</span>
+        </div>
+      </div>
+      <div class="op__status-conexao" id="status-conexao">
+        <span class="op__ponto" aria-hidden="true"></span>
+        <span id="status-conexao-texto">Conectando...</span>
+      </div>
+    </header>
+    <div class="linha-dagua" aria-hidden="true"></div>
+
+    <main class="op__grid">
+      <!-- Coluna: fila de espera -->
+      <section class="op__coluna op__coluna--fila" aria-labelledby="titulo-fila">
+        <div class="op__coluna-topo">
+          <h2 id="titulo-fila">Fila de espera</h2>
+          <span class="op__contador" id="contador-fila">0</span>
+        </div>
+        <ul class="fila-lista" id="fila-lista">
+          <!-- itens inseridos via JS -->
+        </ul>
+        <p class="fila-vazia" id="fila-vazia" hidden>Nenhuma senha aguardando no momento.</p>
+      </section>
+
+      <!-- Coluna: esteiras -->
+      <section class="op__coluna op__coluna--esteiras" aria-labelledby="titulo-esteiras">
+        <div class="op__coluna-topo">
+          <h2 id="titulo-esteiras">Esteiras</h2>
+        </div>
+        <div class="esteiras-grid" id="esteiras-grid">
+          <!-- cards inseridos via JS -->
+        </div>
+
+        <div class="ultimas-chamadas">
+          <h3>Últimas chamadas</h3>
+          <ul id="ultimas-chamadas-lista" class="ultimas-chamadas__lista"></ul>
+        </div>
+      </section>
+    </main>
+  </div>
+
+  <!-- Template de card de esteira -->
+  <template id="template-esteira">
+    <article class="esteira-card">
+      <header class="esteira-card__header">
+        <h3 class="esteira-card__nome"></h3>
+        <span class="badge esteira-card__badge"></span>
+      </header>
+      <div class="esteira-card__corpo">
+        <p class="esteira-card__senha-label">Senha atual</p>
+        <p class="esteira-card__senha-numero">—</p>
+      </div>
+      <div class="esteira-card__acoes"></div>
+    </article>
+  </template>
+
+  <!-- Template de item da fila -->
+  <template id="template-fila-item">
+    <li class="fila-item">
+      <div class="fila-item__info">
+        <span class="fila-item__numero"></span>
+        <span class="fila-item__hora"></span>
+      </div>
+      <button class="fila-item__cancelar" type="button" title="Cancelar senha">Cancelar</button>
+    </li>
+  </template>
+
+  <script src="/socket.io/socket.io.js"></script>
+  <script src="/assets/js/api.js"></script>
+  <script src="js/operador.js"></script>
+</body>
+</html>

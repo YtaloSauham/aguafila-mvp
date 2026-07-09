@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Painel Público · Abastecimento de Água</title>
+  <link rel="stylesheet" href="/assets/css/base.css" />
+  <link rel="stylesheet" href="css/painel.css" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,500;0,9..144,700;1,9..144,500&family=Manrope:wght@400;500;600;700&family=Bricolage+Grotesque:wght@600;700;800&display=swap" rel="stylesheet" />
+</head>
+<body>
+  <div class="aurora" aria-hidden="true"></div>
+  <div class="grao" aria-hidden="true"></div>
+
+  <div class="pn">
+    <header class="pn__header">
+      <div class="pn__marca">
+        <span class="marca-gota" aria-hidden="true">
+          <svg width="30" height="30" viewBox="0 0 26 26" fill="none">
+            <defs>
+              <linearGradient id="gota-grad-p" x1="0" y1="0" x2="0" y2="26" gradientUnits="userSpaceOnUse">
+                <stop offset="0" stop-color="#5FF3DA"/>
+                <stop offset="1" stop-color="#0EB6A4"/>
+              </linearGradient>
+            </defs>
+            <path d="M13 1.5C13 1.5 4 12.2 4 17.3C4 22.2 8.1 25 13 25C17.9 25 22 22.2 22 17.3C22 12.2 13 1.5 13 1.5Z" fill="url(#gota-grad-p)"/>
+          </svg>
+        </span>
+        <span id="pn-empresa">Empresa de Abastecimento de Água</span>
+      </div>
+      <span class="pn__relogio" id="pn-relogio">--:--:--</span>
+    </header>
+    <div class="linha-dagua pn__linha" aria-hidden="true"></div>
+
+    <main class="pn__esteiras" id="pn-esteiras">
+      <!-- cards de esteira inseridos via JS -->
+    </main>
+
+    <section class="pn__historico">
+      <h2>Últimas chamadas</h2>
+      <ul class="pn__historico-lista" id="pn-historico-lista"></ul>
+    </section>
+
+    <footer class="pn__rodape">
+      <span id="pn-mensagem">Bem-vindo! Aguarde a chamada da sua senha.</span>
+    </footer>
+  </div>
+
+  <!-- Template de card de esteira -->
+  <template id="template-pn-esteira">
+    <article class="pn-card">
+      <p class="pn-card__nome"></p>
+      <p class="pn-card__numero">—</p>
+      <span class="badge pn-card__badge"></span>
+    </article>
+  </template>
+
+  <script src="/socket.io/socket.io.js"></script>
+  <script src="/assets/js/api.js"></script>
+  <script src="js/audio-player.js"></script>
+  <script src="js/painel.js"></script>
+</body>
+</html>

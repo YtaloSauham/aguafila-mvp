@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no" />
+  <meta http-equiv="Cache-Control" content="no-store, no-cache, must-revalidate, proxy-revalidate" />
+  <meta http-equiv="Pragma" content="no-cache" />
+  <meta http-equiv="Expires" content="0" />
+  <title>Terminal de Autoatendimento · Abastecimento de Água</title>
+  <link rel="stylesheet" href="/assets/css/base.css?v=20260708-1" />
+  <link rel="stylesheet" href="css/terminal.css?v=20260708-1" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,500;0,9..144,600;1,9..144,500;1,9..144,600&family=Manrope:wght@400;500;600;700&family=Bricolage+Grotesque:wght@600;700;800&display=swap" rel="stylesheet" />
+</head>
+<body>
+  <div class="aurora" aria-hidden="true"></div>
+  <div class="grao" aria-hidden="true"></div>
+
+  <main class="terminal" id="tela-inicial">
+    <div class="terminal__aro" aria-hidden="true"></div>
+
+    <header class="terminal__cabecalho">
+      <div class="terminal__logo">
+        <span class="marca-gota" aria-hidden="true">
+          <svg width="26" height="26" viewBox="0 0 26 26" fill="none">
+            <defs>
+              <linearGradient id="gota-grad-t" x1="0" y1="0" x2="0" y2="26" gradientUnits="userSpaceOnUse">
+                <stop offset="0" stop-color="#5FF3DA"/>
+                <stop offset="1" stop-color="#0EB6A4"/>
+              </linearGradient>
+            </defs>
+            <path d="M13 1.5C13 1.5 4 12.2 4 17.3C4 22.2 8.1 25 13 25C17.9 25 22 22.2 22 17.3C22 12.2 13 1.5 13 1.5Z" fill="url(#gota-grad-t)"/>
+          </svg>
+        </span>
+        <span>Abastecimento de Água</span>
+      </div>
+      <span class="terminal__relogio" id="relogio">--:--</span>
+    </header>
+    <div class="linha-dagua" style="margin-top:18px;" aria-hidden="true"></div>
+
+    <section class="terminal__conteudo">
+      <p class="terminal__eyebrow">Terminal de autoatendimento</p>
+      <h1 class="terminal__titulo">Bem-vindo. <em>Retire sua senha</em><br>para carregar os galões.</h1>
+
+      <button class="terminal__botao" id="btn-retirar-senha" type="button">
+        <span class="terminal__botao-rotulo">Retirar Senha</span>
+        <span class="terminal__botao-icone" aria-hidden="true">＋</span>
+      </button>
+
+      <p class="terminal__ajuda">Toque no botão acima para gerar sua senha.<br>A senha será impressa automaticamente.</p>
+    </section>
+
+    <footer class="terminal__rodape">Aguarde no pátio até ser chamado pelo painel.</footer>
+  </main>
+
+  <!-- Tela de senha emitida (Etapa 4) -->
+  <section class="terminal-senha" id="tela-senha" hidden>
+    <div class="terminal-senha__card">
+      <p class="terminal-senha__eyebrow" id="terminal-senha-status">Senha gerada</p>
+      <p class="terminal-senha__numero" id="terminal-senha-numero">A000</p>
+      <p class="terminal-senha__instrucao">Retire o comprovante impresso e aguarde no pátio.</p>
+      <div class="terminal-senha__loading" aria-hidden="true"></div>
+    </div>
+  </section>
+/*
+  <!-- Tela de erro (ex.: backend indisponível) -->
+  <section class="terminal-erro" id="tela-erro" hidden>
+    <div class="terminal-erro__card">
+      <span class="terminal-erro__icone" aria-hidden="true">!</span>
+      <p class="terminal-erro__titulo">Não foi possível gerar sua senha</p>
+      <p class="terminal-erro__mensagem" id="terminal-erro-mensagem">Tente novamente em instantes.</p>
+      <button class="terminal-erro__botao" id="btn-tentar-novamente" type="button">Tentar novamente</button>
+    </div>
+  </section>
+  */
+
+  <script src="/assets/js/api.js?v=20260708-1"></script>
+  <script src="js/terminal.js?v=20260708-1"></script>
+</body>
+</html>
