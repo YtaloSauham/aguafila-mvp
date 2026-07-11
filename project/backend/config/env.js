@@ -32,7 +32,7 @@ const env = {
     origin: process.env.CORS_ORIGIN || '*',
   },
   printer: {
-    driver: process.env.PRINTER_DRIVER || 'console',
+    driver: process.env.PRINTER_DRIVER || 'escpos',
     port: process.env.PRINTER_PORT || '',
   },
   audio: {
