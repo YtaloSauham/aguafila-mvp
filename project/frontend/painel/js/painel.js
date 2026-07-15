@@ -70,7 +70,8 @@
   document.addEventListener('keydown', () => AudioPlayer.desbloquear(), { once: true });
 
   // --- Tempo real ---
-  const socket = io();
+  const socketUrl = window.AGUAFILA_SOCKET_URL || undefined;
+  const socket = socketUrl ? io(socketUrl) : io();
 
   socket.on('connect', () => carregarEstado());
 

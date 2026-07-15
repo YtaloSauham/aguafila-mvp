@@ -1,4 +1,5 @@
 const http = require('http');
+const os = require('os');
 const app = require('./app');
 const env = require('./config/env');
 const { testConnection } = require('./config/database');
@@ -6,6 +7,21 @@ const { inicializar } = require('./realtime/socketManager');
 const logger = require('./utils/logger');
 
 let httpServerAtivo = null;
+
+function getLocalNetworkAddress() {
+  const interfaces = os.networkInterfaces();
+
+  for (const iface of Object.values(interfaces)) {
+    if (!iface) continue;
+    for (const addr of iface) {
+      if (addr.family === 'IPv4' && !addr.internal) {
+        return addr.address;
+      }
+    }
+  }
+
+  return '127.0.0.1';
+}
 
 async function iniciar() {
   try {
@@ -36,12 +52,18 @@ async function iniciar() {
         process.exit(1);
       });
 
-      httpServer.listen(porta, () => {
+      httpServer.listen(porta, env.server.host, () => {
         httpServerAtivo = httpServer;
-        logger.info(`Servidor rodando em http://localhost:${porta}`);
-        logger.info(`Terminal:  http://localhost:${porta}/terminal`);
-        logger.info(`Operador:  http://localhost:${porta}/operador`);
-        logger.info(`Painel:    http://localhost:${porta}/painel`);
+        const hostDisplay = env.server.host === '0.0.0.0' ? getLocalNetworkAddress() : env.server.host;
+        logger.info(`Servidor rodando em http://${hostDisplay}:${porta}`);
+        logger.info(`Terminal:  http://${hostDisplay}:${porta}/terminal`);
+        logger.info(`Operador:  http://${hostDisplay}:${porta}/operador`);
+        logger.info(`Painel:    http://${hostDisplay}:${porta}/painel`);
+
+        if (env.server.host === '0.0.0.0') {
+          logger.info(`Acesse localmente: http://localhost:${porta}`);
+          logger.info(`Acesse na rede local: http://${hostDisplay}:${porta}`);
+        }
       });
     };
 

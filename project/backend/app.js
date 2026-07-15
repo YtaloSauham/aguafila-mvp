@@ -10,14 +10,16 @@ const app = express();
 
 const corsOptions = {
   origin: (origin, callback) => {
-    const allowedOrigin = env.cors.origin || '*';
+    const allowedOrigins = Array.isArray(env.cors.origin)
+      ? env.cors.origin
+      : [env.cors.origin || '*'];
+    const allowAllOrigins = allowedOrigins.includes('*');
 
-    if (allowedOrigin === '*' || !origin) {
+    if (allowAllOrigins || !origin) {
       callback(null, true);
       return;
     }
 
-    const origins = [allowedOrigin];
     const localHosts = ['http://localhost:3000', 'http://localhost:3001', 'http://127.0.0.1:3000', 'http://127.0.0.1:3001'];
 
     if (localHosts.includes(origin) || origin.startsWith('http://localhost:') || origin.startsWith('http://127.0.0.1:')) {
@@ -25,7 +27,7 @@ const corsOptions = {
       return;
     }
 
-    if (origins.includes(origin)) {
+    if (allowedOrigins.includes(origin)) {
       callback(null, true);
       return;
     }

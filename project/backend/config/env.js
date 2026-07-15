@@ -15,8 +15,16 @@ function toInt(value, defaultValue) {
   return Number.isNaN(parsed) ? defaultValue : parsed;
 }
 
+function parseCommaSeparatedOrigins(value, defaultValue) {
+  if (value === undefined || value === null || value === '') return defaultValue;
+  const trimmed = String(value).trim();
+  if (trimmed === '*') return '*';
+  return trimmed.split(',').map((item) => item.trim()).filter(Boolean);
+}
+
 const env = {
   server: {
+    host: process.env.HOST || process.env.SERVER_HOST || '0.0.0.0',
     port: toInt(process.env.PORT, 3000),
     nodeEnv: process.env.NODE_ENV || 'development',
   },
@@ -29,7 +37,7 @@ const env = {
     connectionLimit: toInt(process.env.DB_CONNECTION_LIMIT, 10),
   },
   cors: {
-    origin: process.env.CORS_ORIGIN || '*',
+    origin: parseCommaSeparatedOrigins(process.env.CORS_ORIGIN || '*', '*'),
   },
   printer: {
     driver: process.env.PRINTER_DRIVER || 'escpos',

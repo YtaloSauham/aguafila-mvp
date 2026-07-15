@@ -64,20 +64,26 @@ Repository Pattern e Service Layer (seção 15 da especificação).
 Veja o passo a passo completo em [`docs/INSTALACAO.md`](docs/INSTALACAO.md).
 
 ```bash
-# 1. Banco de dados
+# 1. Banco de dados (Máquina servidor)
 mysql -u root -p < sql/schema.sql
 mysql -u root -p < sql/seed.sql
 
-# 2. Backend
+# 2. Backend (Máquina servidor)
 cd backend
-cp .env.example .env   # ajuste usuário/senha do MariaDB
+cp .env.example .env   # ajuste HOST, DB_HOST, CORS_ORIGIN conforme necessário
 npm install
 npm start
 
-# 3. Acesse
+# 3. Acesse localmente (Máquina servidor)
 # Terminal:  http://localhost:3000/terminal
 # Operador:  http://localhost:3000/operador
 # Painel:    http://localhost:3000/painel
+
+# 4. Acesse remotamente (Máquinas clientes)
+# Substitua 192.168.1.100 pelo IP da máquina servidor
+# Terminal:  http://192.168.1.100:3000/terminal
+# Operador:  http://192.168.1.100:3000/operador
+# Painel:    http://192.168.1.100:3000/painel
 ```
 
 ## Documentação
