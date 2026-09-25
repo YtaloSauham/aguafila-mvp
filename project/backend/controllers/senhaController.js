@@ -8,7 +8,8 @@ const asyncHandler = require('../utils/asyncHandler');
  */
 
 const emitir = asyncHandler(async (req, res) => {
-  const resultado = await senhaService.gerarSenha();
+  const tipo = req.body?.tipo === 'PRIORIDADE' ? 'PRIORIDADE' : 'NORMAL';
+  const resultado = await senhaService.gerarSenha(tipo);
   res.status(201).json({ sucesso: true, dados: resultado });
 });
 

@@ -14,7 +14,10 @@ const logger = require('../utils/logger');
  * outras camadas.
  */
 
-const PREFIXO_SENHA = 'A';
+const PREFIXOS_SENHA = {
+  NORMAL: 'A',
+  PRIORIDADE: 'P',
+};
 
 function dataDeHoje() {
   // Data local no formato YYYY-MM-DD, usada como chave de reinício diário (RN003).
@@ -25,21 +28,23 @@ function dataDeHoje() {
   return `${ano}-${mes}-${dia}`;
 }
 
-function formatarNumero(sequencial) {
-  return `${PREFIXO_SENHA}${String(sequencial).padStart(3, '0')}`;
+function formatarNumero(sequencial, tipo = 'NORMAL') {
+  const prefixo = PREFIXOS_SENHA[tipo] || PREFIXOS_SENHA.NORMAL;
+  return `${prefixo}${String(sequencial).padStart(3, '0')}`;
 }
 
 /**
  * RN001, RN002, RN003, RN004: gera a próxima senha sequencial do dia,
  * garantindo unicidade por data. Salva no banco e aciona a impressão.
  */
-async function gerarSenha() {
+async function gerarSenha(tipo = 'NORMAL') {
+  const tipoNormalizado = ['NORMAL', 'PRIORIDADE'].includes(tipo) ? tipo : 'NORMAL';
   const hoje = dataDeHoje();
 
   const senha = await withTransaction(async (connection) => {
     const ultimoSequencial = await senhaRepository.buscarUltimoSequencialDoDia(hoje, connection);
     const proximoSequencial = ultimoSequencial + 1;
-    const numero = formatarNumero(proximoSequencial);
+    const numero = formatarNumero(proximoSequencial, tipoNormalizado);
 
     return senhaRepository.criar(
       { numero, sequencial: proximoSequencial, data: hoje },
@@ -59,10 +64,10 @@ async function gerarSenha() {
     logger.warn(`Senha ${senha.numero} emitida, mas impressão falhou: ${resultadoImpressao.mensagem}`);
   }
 
-  emitir(EVENTOS.SENHA_CRIADA, { senha });
-  emitir(EVENTOS.ATUALIZACAO_PAINEL, { motivo: 'senha_criada' });
+  emitir(EVENTOS.SENHA_CRIADA, { senha, tipo: tipoNormalizado });
+  emitir(EVENTOS.ATUALIZACAO_PAINEL, { motivo: 'senha_criada', tipo: tipoNormalizado });
 
-  return { senha, impressao: resultadoImpressao };
+  return { senha, impressao: resultadoImpressao, tipo: tipoNormalizado };
 }
 
 /**
@@ -222,6 +227,7 @@ async function cancelarSenha(senhaId) {
 
 module.exports = {
   gerarSenha,
+  formatarNumero,
   listarFila,
   buscarPorId,
   chamarSenha,

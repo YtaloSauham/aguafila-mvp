@@ -43,12 +43,19 @@
       <p class="terminal__eyebrow">Terminal de autoatendimento</p>
       <h1 class="terminal__titulo">Bem-vindo. <em>Retire sua senha</em><br>para carregar os galões.</h1>
 
-      <button class="terminal__botao" id="btn-retirar-senha" type="button">
-        <span class="terminal__botao-rotulo">Retirar Senha</span>
-        <span class="terminal__botao-icone" aria-hidden="true">＋</span>
-      </button>
+      <div class="terminal__acoes">
+        <button class="terminal__botao" id="btn-retirar-senha" type="button">
+          <span class="terminal__botao-rotulo">Retirar Senha</span>
+          <span class="terminal__botao-icone" aria-hidden="true">＋</span>
+        </button>
 
-      <p class="terminal__ajuda">Toque no botão acima para gerar sua senha.<br>A senha será impressa automaticamente.</p>
+        <button class="terminal__botao terminal__botao--prioridade" id="btn-retirar-senha-prioridade" type="button">
+          <span class="terminal__botao-rotulo">Senha Prioridade</span>
+          <span class="terminal__botao-icone" aria-hidden="true">★</span>
+        </button>
+      </div>
+
+      <p class="terminal__ajuda">Toque em um dos botões acima para gerar sua senha.
     </section>
 
     <footer class="terminal__rodape">Aguarde no pátio até ser chamado pelo painel.</footer>

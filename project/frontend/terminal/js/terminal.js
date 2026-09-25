@@ -11,12 +11,14 @@
   const telaErro = document.getElementById('tela-erro');
 
   const btnRetirar = document.getElementById('btn-retirar-senha');
+  const btnRetirarPrioridade = document.getElementById('btn-retirar-senha-prioridade');
   const btnTentarNovamente = document.getElementById('btn-tentar-novamente');
   const elRelogio = document.getElementById('relogio');
   const elSenhaNumero = document.getElementById('terminal-senha-numero');
   const elSenhaStatus = document.getElementById('terminal-senha-status');
   const elErroMensagem = document.getElementById('terminal-erro-mensagem');
 
+  const botoesSenha = [btnRetirar, btnRetirarPrioridade].filter(Boolean);
   let voltandoAoInicioTimer = null;
 
   function mostrar(tela) {
@@ -34,69 +36,94 @@
     elRelogio.textContent = agora.toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit' });
   }
 
-  async function retirarSenha() {
-    const rotulo = btnRetirar.querySelector('.terminal__botao-rotulo');
-    const textoOriginal = rotulo?.textContent || 'Retirar Senha';
+  function resetarBotao(botao) {
+    if (!botao) return;
+    const rotulo = botao.querySelector('.terminal__botao-rotulo');
+    const textoOriginal = botao.dataset.textoOriginal || rotulo?.textContent || 'Retirar Senha';
 
-    btnRetirar.disabled = true;
-    btnRetirar.setAttribute('aria-busy', 'true');
+    botao.disabled = false;
+    botao.removeAttribute('aria-busy');
     if (rotulo) {
-      rotulo.textContent = 'Gerando senha...';
+      rotulo.textContent = textoOriginal;
+    }
+  }
+
+  function resetarBotoes() {
+    botoesSenha.forEach((botao) => resetarBotao(botao));
+  }
+
+  async function retirarSenha(tipo = 'NORMAL') {
+    const botao = tipo === 'PRIORIDADE' ? btnRetirarPrioridade : btnRetirar;
+    const rotulo = botao?.querySelector('.terminal__botao-rotulo');
+    const textoOriginal = botao?.dataset.textoOriginal || rotulo?.textContent || 'Retirar Senha';
+
+    if (botao) {
+      botao.dataset.textoOriginal = textoOriginal;
+      botao.disabled = true;
+      botao.setAttribute('aria-busy', 'true');
+    }
+
+    botoesSenha.forEach((outroBotao) => {
+      if (outroBotao && outroBotao !== botao) {
+        outroBotao.disabled = true;
+        outroBotao.setAttribute('aria-busy', 'true');
+      }
+    });
+
+    if (rotulo) {
+      rotulo.textContent = tipo === 'PRIORIDADE' ? 'Gerando prioridade...' : 'Gerando senha...';
     }
 
     try {
-      const resultado = await Api.post('/senhas');
+      const resultado = await Api.post('/senhas', { tipo });
       const { senha, impressao } = resultado;
 
       elSenhaNumero.textContent = senha.numero;
       elSenhaStatus.textContent = impressao?.sucesso
-        ? 'Senha gerada e impressa'
-        : 'Senha gerada (verifique a impressora)';
+        ? `Senha ${tipo === 'PRIORIDADE' ? 'prioritária' : 'normal'} gerada e impressa`
+        : `Senha ${tipo === 'PRIORIDADE' ? 'prioritária' : 'normal'} gerada (verifique a impressora)`;
 
       mostrar(telaSenha);
 
       clearTimeout(voltandoAoInicioTimer);
       voltandoAoInicioTimer = setTimeout(() => {
         mostrar(telaInicial);
-        btnRetirar.disabled = false;
-        btnRetirar.removeAttribute('aria-busy');
-        if (rotulo) {
-          rotulo.textContent = textoOriginal;
-        }
+        resetarBotoes();
       }, TEMPO_EXIBICAO_SENHA_MS);
     } catch (erro) {
       elErroMensagem.textContent = erro.message || 'Verifique a conexão com o servidor local.';
       mostrar(telaErro);
-      btnRetirar.disabled = false;
-      btnRetirar.removeAttribute('aria-busy');
-      if (rotulo) {
-        rotulo.textContent = textoOriginal;
-      }
+      resetarBotao(botao);
+      botoesSenha.forEach((outroBotao) => {
+        if (outroBotao && outroBotao !== botao) {
+          resetarBotao(outroBotao);
+        }
+      });
     }
   }
 
   btnRetirar.addEventListener('click', (event) => {
     event.preventDefault();
     event.stopPropagation();
-    retirarSenha();
+    retirarSenha('NORMAL');
+  });
+
+  btnRetirarPrioridade?.addEventListener('click', (event) => {
+    event.preventDefault();
+    event.stopPropagation();
+    retirarSenha('PRIORIDADE');
   });
 
   btnTentarNovamente.addEventListener('click', (event) => {
     event.preventDefault();
     event.stopPropagation();
     mostrar(telaInicial);
-    btnRetirar.disabled = false;
-    if (btnRetirar.querySelector('.terminal__botao-rotulo')) {
-      btnRetirar.querySelector('.terminal__botao-rotulo').textContent = 'Retirar Senha';
-    }
+    resetarBotoes();
   });
 
   function inicializarTerminal() {
     mostrar(telaInicial);
-    btnRetirar.disabled = false;
-    if (btnRetirar.querySelector('.terminal__botao-rotulo')) {
-      btnRetirar.querySelector('.terminal__botao-rotulo').textContent = 'Retirar Senha';
-    }
+    resetarBotoes();
   }
 
   atualizarRelogio();
