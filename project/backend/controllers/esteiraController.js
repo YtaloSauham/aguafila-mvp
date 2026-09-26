@@ -11,4 +11,14 @@ const buscarPorId = asyncHandler(async (req, res) => {
   res.status(200).json({ sucesso: true, dados: esteira });
 });
 
-module.exports = { listar, buscarPorId };
+const criar = asyncHandler(async (req, res) => {
+  const esteira = await esteiraService.criar(req.body || {});
+  res.status(201).json({ sucesso: true, dados: esteira });
+});
+
+const remover = asyncHandler(async (req, res) => {
+  const resultado = await esteiraService.remover(req.params.id);
+  res.status(200).json({ sucesso: true, dados: resultado });
+});
+
+module.exports = { listar, buscarPorId, criar, remover };

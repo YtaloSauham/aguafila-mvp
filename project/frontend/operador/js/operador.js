@@ -11,6 +11,12 @@
   const ultimasChamadasLista = document.getElementById('ultimas-chamadas-lista');
   const statusConexao = document.getElementById('status-conexao');
   const statusConexaoTexto = document.getElementById('status-conexao-texto');
+  const btnConfiguracoes = document.getElementById('btn-configuracoes');
+  const configModal = document.getElementById('config-modal');
+  const btnFecharConfig = document.getElementById('btn-fechar-config');
+  const formNovaEsteira = document.getElementById('form-nova-esteira');
+  const inputNovaEsteira = document.getElementById('nova-esteira-nome');
+  const configEsteirasLista = document.getElementById('config-esteiras-lista');
 
   const templateEsteira = document.getElementById('template-esteira');
   const templateFilaItem = document.getElementById('template-fila-item');
@@ -26,6 +32,86 @@
   function formatarHora(dataIso) {
     if (!dataIso) return '';
     return new Date(dataIso).toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit' });
+  }
+
+  function abrirConfiguracoes() {
+    configModal.hidden = false;
+    carregarConfiguracoes();
+  }
+
+  function fecharConfiguracoes() {
+    configModal.hidden = true;
+    if (formNovaEsteira) formNovaEsteira.reset();
+  }
+
+  async function carregarConfiguracoes() {
+    try {
+      const esteiras = await Api.get('/esteiras');
+      configEsteirasLista.innerHTML = '';
+
+      if (!esteiras.length) {
+        const vazio = document.createElement('p');
+        vazio.className = 'config-modal__vazio';
+        vazio.textContent = 'Nenhuma esteira cadastrada.';
+        configEsteirasLista.appendChild(vazio);
+        return;
+      }
+
+      esteiras.forEach((esteira) => {
+        const item = document.createElement('div');
+        item.className = 'config-esteira-item';
+
+        const info = document.createElement('div');
+        info.className = 'config-esteira-item__info';
+        info.innerHTML = `<strong>${esteira.nome}</strong><span>${esteira.status === 'LIVRE' ? 'Livre' : 'Ocupada'}</span>`;
+
+        const remover = document.createElement('button');
+        remover.type = 'button';
+        remover.className = 'config-esteira-item__remover';
+        remover.textContent = 'Remover';
+        remover.disabled = esteira.status === 'OCUPADA';
+        remover.title = esteira.status === 'OCUPADA' ? 'Remova após liberar a esteira' : 'Remover estaira';
+        remover.addEventListener('click', () => removerEsteira(esteira.id));
+
+        item.append(info, remover);
+        configEsteirasLista.appendChild(item);
+      });
+    } catch (erro) {
+      console.error('Falha ao carregar esteiras:', erro);
+      configEsteirasLista.innerHTML = `<p class="config-modal__erro">Não foi possível carregar as esteiras.</p>`;
+    }
+  }
+
+  async function removerEsteira(esteiraId) {
+    const confirmacao = confirm('Deseja remover esta esteira do sistema?');
+    if (!confirmacao) return;
+
+    try {
+      await Api.delete(`/esteiras/${esteiraId}`);
+      await carregarConfiguracoes();
+      await carregarTudo();
+    } catch (erro) {
+      alert(`Não foi possível remover a esteira: ${erro.message}`);
+    }
+  }
+
+  async function criarEsteira(event) {
+    event.preventDefault();
+    const nome = inputNovaEsteira.value.trim();
+    if (!nome) {
+      alert('Informe o nome da esteira.');
+      inputNovaEsteira.focus();
+      return;
+    }
+
+    try {
+      await Api.post('/esteiras', { nome });
+      formNovaEsteira.reset();
+      await carregarConfiguracoes();
+      await carregarTudo();
+    } catch (erro) {
+      alert(`Não foi possível adicionar a esteira: ${erro.message}`);
+    }
   }
 
   async function carregarTudo() {
@@ -163,6 +249,15 @@
       alert(`Não foi possível cancelar a senha: ${erro.message}`);
     }
   }
+
+  btnConfiguracoes?.addEventListener('click', abrirConfiguracoes);
+  btnFecharConfig?.addEventListener('click', fecharConfiguracoes);
+  configModal?.addEventListener('click', (event) => {
+    if (event.target instanceof HTMLElement && event.target.dataset.fecharConfig === 'true') {
+      fecharConfiguracoes();
+    }
+  });
+  formNovaEsteira?.addEventListener('submit', criarEsteira);
 
   // --- Tempo real ---
   const socketUrl = window.AGUAFILA_SOCKET_URL || undefined;

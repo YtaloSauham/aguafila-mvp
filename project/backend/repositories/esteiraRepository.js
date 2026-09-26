@@ -47,9 +47,28 @@ async function atualizarStatus(id, status, senhaAtualId, connection = pool) {
   return buscarPorId(id, connection);
 }
 
+async function criar({ nome }, connection = pool) {
+  const [result] = await connection.query(
+    `INSERT INTO esteiras (nome, status, senha_atual_id, ultima_atualizacao, criado_em)
+     VALUES (?, 'LIVRE', NULL, NOW(), NOW())`,
+    [nome]
+  );
+  return buscarPorId(result.insertId, connection);
+}
+
+async function remover(id, connection = pool) {
+  const [result] = await connection.query(
+    `DELETE FROM esteiras WHERE id = ?`,
+    [id]
+  );
+  return result.affectedRows > 0;
+}
+
 module.exports = {
   listarTodas,
   buscarPorId,
   buscarPorIdComLock,
   atualizarStatus,
+  criar,
+  remover,
 };

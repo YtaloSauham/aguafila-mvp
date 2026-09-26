@@ -4,6 +4,8 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Painel do Operador · Abastecimento de Água</title>
+  <link rel="icon" type="image/svg+xml" href="/assets/favicon.svg" />
+  <link rel="shortcut icon" href="/favicon.ico" />
   <link rel="stylesheet" href="/assets/css/base.css" />
   <link rel="stylesheet" href="css/operador.css" />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
@@ -30,9 +32,12 @@
           <span class="op__subtitulo">AguaFila - Abastecimento de Água</span>
         </div>
       </div>
-      <div class="op__status-conexao" id="status-conexao">
-        <span class="op__ponto" aria-hidden="true"></span>
-        <span id="status-conexao-texto">Conectando...</span>
+      <div class="op__header-acoes">
+        <button class="op__config-botao" id="btn-configuracoes" type="button">Configurações</button>
+        <div class="op__status-conexao" id="status-conexao">
+          <span class="op__ponto" aria-hidden="true"></span>
+          <span id="status-conexao-texto">Conectando...</span>
+        </div>
       </div>
     </header>
     <div class="linha-dagua" aria-hidden="true"></div>
@@ -92,6 +97,32 @@
       <button class="fila-item__cancelar" type="button" title="Cancelar senha">Cancelar</button>
     </li>
   </template>
+
+  <div class="config-modal" id="config-modal" hidden>
+    <div class="config-modal__backdrop" data-fechar-config="true" aria-hidden="true"></div>
+    <aside class="config-modal__panel" role="dialog" aria-modal="true" aria-labelledby="titulo-configuracoes">
+      <div class="config-modal__header">
+        <div>
+          <p class="config-modal__eyebrow">Sistema</p>
+          <h2 id="titulo-configuracoes">Configurações</h2>
+        </div>
+        <button class="config-modal__fechar" type="button" id="btn-fechar-config" aria-label="Fechar configurações">×</button>
+      </div>
+
+      <section class="config-modal__secao">
+        <h3>Esteiras</h3>
+        <div class="config-modal__lista" id="config-esteiras-lista"></div>
+      </section>
+
+      <form class="config-modal__form" id="form-nova-esteira">
+        <label for="nova-esteira-nome">Adicionar esteira</label>
+        <div class="config-modal__form-row">
+          <input id="nova-esteira-nome" name="nome" type="text" maxlength="50" placeholder="Ex.: Esteira 5" required />
+          <button type="submit">Adicionar</button>
+        </div>
+      </form>
+    </aside>
+  </div>
 
   <script src="/socket.io/socket.io.js"></script>
   <script src="/assets/js/config.js"></script>

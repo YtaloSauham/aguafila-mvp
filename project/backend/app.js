@@ -7,6 +7,7 @@ const requestLogger = require('./middlewares/requestLogger');
 const { errorHandler, notFoundHandler } = require('./middlewares/errorHandler');
 
 const app = express();
+const faviconPath = path.join(__dirname, '..', 'frontend', 'assets', 'favicon.svg');
 
 const corsOptions = {
   origin: (origin, callback) => {
@@ -52,6 +53,10 @@ app.use('/assets', express.static(path.join(FRONTEND_DIR, 'assets')));
 app.use('/terminal', express.static(path.join(FRONTEND_DIR, 'terminal')));
 app.use('/operador', express.static(path.join(FRONTEND_DIR, 'operador')));
 app.use('/painel', express.static(path.join(FRONTEND_DIR, 'painel')));
+
+app.get('/favicon.ico', (req, res) => {
+  res.sendFile(faviconPath);
+});
 
 app.get('/', (req, res) => {
   res.redirect('/terminal');
